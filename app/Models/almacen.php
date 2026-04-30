@@ -9,6 +9,9 @@ class Almacen extends Model
     protected $table = 'almacenes';
     protected $primaryKey = 'id_almacen';
 
+    const CREATED_AT = 'created_at';
+    const UPDATED_AT = null;
+
     protected $fillable = [
         'id_empresa',
         'direccion',
