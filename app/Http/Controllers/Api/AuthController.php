@@ -18,7 +18,7 @@ class AuthController extends Controller
             'dni' => 'required|string|max:20|unique:users,dni',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:6',
-            'cif' => 'required|string|exists:empresas,cif',
+            'cif' => 'required|string|',
         ]);
 
         if ($validator->fails()) {
