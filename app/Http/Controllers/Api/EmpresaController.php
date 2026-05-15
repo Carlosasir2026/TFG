@@ -15,13 +15,12 @@ class EmpresaController extends Controller
             'nombre' => 'required|string|max:100',
             'cif' => 'required|string|max:20|unique:empresas,cif',
             'direccion' => 'nullable|string|max:255',
-            'telefono' => 'nullable|string|max:20',
-            'email' => 'nullable|email|max:100',
+            'provincia' => 'nullable|string|max:20',
+            'pais' => 'nullable|email|max:100',
         ], [
             'nombre.required' => 'El nombre de la empresa es obligatorio.',
             'cif.required' => 'El CIF de la empresa es obligatorio.',
-            'cif.unique' => 'Ya existe una empresa registrada con ese CIF.',
-            'email.email' => 'El correo de la empresa no tiene un formato válido.',
+            'cif.unique' => 'Ya existe una empresa registrada con ese CIF.'
         ]);
 
         if ($validator->fails()) {
@@ -35,8 +34,8 @@ class EmpresaController extends Controller
             'nombre' => $request->nombre,
             'cif' => $request->cif,
             'direccion' => $request->direccion,
-            'telefono' => $request->telefono,
-            'email' => $request->email,
+            'provincia' => $request->provincia,
+            'pais' => $request->pais,
         ]);
 
         return response()->json([
