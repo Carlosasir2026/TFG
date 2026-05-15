@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\AlmacenController;
 use App\Http\Controllers\Api\ProductoController;
+use App\Http\Controllers\Api\EmpresaController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -20,4 +21,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/productos', [ProductoController::class, 'store']);
     Route::put('/productos/{id}', [ProductoController::class, 'update']);
     Route::delete('/productos/{id}', [ProductoController::class, 'destroy']);
+
+    Route::post('/empresas', [EmpresaController::class, 'store']);
 });
