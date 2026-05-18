@@ -18,7 +18,7 @@ class AuthController extends Controller
             'dni' => 'required|string|max:20|unique:users,dni',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:6',
-            'cif' => 'required|string|exist:empresas,CIF',
+            'cif' => 'required|string|exists:empresas,cif',
         ]);
 
         if ($validator->fails()) {
@@ -28,7 +28,7 @@ class AuthController extends Controller
             ], 422);
         }
 
-        $empresa = Empresa::where('cif', $request->cif)->first();
+        $empresa = Empresa::where('cif', $request->cif)->firstOrFail();
 
         $user = User::create([
             'id_empresa' => $empresa->id_empresa,
