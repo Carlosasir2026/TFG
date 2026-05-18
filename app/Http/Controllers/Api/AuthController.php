@@ -66,36 +66,46 @@ class AuthController extends Controller
     }
 
     public function login(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|email',
-            'password' => 'required|string',
-        ]);
+{
+    $validator = Validator::make($request->all(), [
+        'email' => 'required|email',
+        'password' => 'required|string',
+    ], [
+        'email.required' => 'El email es obligatorio.',
+        'email.email' => 'El email no tiene un formato válido.',
+        'password.required' => 'La contraseña es obligatoria.',
+    ]);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'message' => 'Error de validación',
-                'errors' => $validator->errors(),
-            ], 422);
-        }
-
-        $user = User::where('email', $request->email)->first();
-
-        if (!$user || !Hash::check($request->password, $user->password)) {
-            return response()->json([
-                'message' => 'Credenciales incorrectas',
-            ], 401);
-        }
-
-        $token = $user->createToken('api_token')->plainTextToken;
-
+    if ($validator->fails()) {
         return response()->json([
-            'message' => 'Login correcto',
-            'token' => $token,
-            'user' => $user,
-            'empresa' => $user->empresa,
-        ]);
+            'message' => 'Error de validación',
+            'errors' => $validator->errors(),
+        ], 422);
     }
+
+    $user = User::where('email', $request->email)->first();
+
+    if (!$user) {
+        return response()->json([
+            'message' => 'No existe ningún usuario registrado con ese email.',
+        ], 404);
+    }
+
+    if (!Hash::check($request->password, $user->password)) {
+        return response()->json([
+            'message' => 'La contraseña introducida no es correcta.',
+        ], 401);
+    }
+
+    $token = $user->createToken('api_token')->plainTextToken;
+
+    return response()->json([
+        'message' => 'Login correcto',
+        'token' => $token,
+        'user' => $user,
+        'empresa' => $user->empresa,
+    ]);
+}
 
     public function logout(Request $request)
     {
