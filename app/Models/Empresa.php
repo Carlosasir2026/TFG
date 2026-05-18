@@ -8,9 +8,15 @@ class Empresa extends Model
 {
     protected $primaryKey = 'id_empresa';
 
+    public $incrementing = true;
+
+    protected $keyType = 'int';
+
     protected $fillable = [
         'nombre',
         'cif',
+        'telefono',
+        'email',
         'direccion',
         'provincia',
         'pais',
