@@ -31,11 +31,11 @@ class EmpresaController extends Controller
         }
 
         $empresa = Empresa::create([
-            'nombre' => $request->nombre,
-            'cif' => $request->cif,
-            'direccion' => $request->direccion,
-            'provincia' => $request->provincia,
-            'pais' => $request->pais,
+            'nombre' => $request['nombre'],
+            'cif' => $request['cif'],
+            'direccion' => $request['direccion'],
+            'provincia' => $request['provincia'],
+            'pais' => $request['pais'],
         ]);
 
         return response()->json([
