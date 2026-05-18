@@ -14,12 +14,29 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'nombre' => 'required|string|max:100',
-            'dni' => 'required|string|max:20|unique:users,dni',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:6',
-            'cif' => 'required|string|exists:empresas,cif',
-        ]);
+        'nombre' => 'required|string|max:100',
+        'dni' => 'required|string|max:10|unique:users,dni',
+        'email' => 'required|email|unique:users,email',
+        'password' => 'required|string|min:6',
+        'cif' => 'required|string|exists:empresas,cif',
+    ], [
+        'nombre.required' => 'El nombre es obligatorio.',
+        'nombre.max' => 'El nombre no puede superar los 100 caracteres.',
+
+        'dni.required' => 'El DNI es obligatorio.',
+        'dni.max' => 'El DNI no puede superar los 10 caracteres.',
+        'dni.unique' => 'Ya existe un usuario registrado con ese DNI.',
+
+        'email.required' => 'El email es obligatorio.',
+        'email.email' => 'El email no tiene un formato válido.',
+        'email.unique' => 'Ya existe un usuario registrado con ese email.',
+
+        'password.required' => 'La contraseña es obligatoria.',
+        'password.min' => 'La contraseña debe tener al menos 6 caracteres.',
+
+        'cif.required' => 'El CIF de la empresa es obligatorio.',
+        'cif.exists' => 'No existe ninguna empresa registrada con ese CIF.',
+    ]);
 
         if ($validator->fails()) {
             return response()->json([
