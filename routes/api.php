@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\EmpresaController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/empresas', [EmpresaController::class, 'store']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
@@ -21,6 +22,4 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/productos', [ProductoController::class, 'store']);
     Route::put('/productos/{id}', [ProductoController::class, 'update']);
     Route::delete('/productos/{id}', [ProductoController::class, 'destroy']);
-
-    Route::post('/empresas', [EmpresaController::class, 'store']);
 });

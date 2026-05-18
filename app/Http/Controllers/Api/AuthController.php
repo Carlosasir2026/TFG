@@ -36,7 +36,6 @@ class AuthController extends Controller
             'dni' => $request->dni,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'rol' => 'usuario',
         ]);
 
         $token = $user->createToken('api_token')->plainTextToken;
