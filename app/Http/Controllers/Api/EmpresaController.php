@@ -16,7 +16,7 @@ class EmpresaController extends Controller
             'cif' => 'required|string|max:20|unique:empresas,cif',
             'direccion' => 'nullable|string|max:255',
             'provincia' => 'nullable|string|max:20',
-            'pais' => 'nullable|email|max:100',
+            'pais' => 'nullable|string|max:100',
         ], [
             'nombre.required' => 'El nombre de la empresa es obligatorio.',
             'cif.required' => 'El CIF de la empresa es obligatorio.',
