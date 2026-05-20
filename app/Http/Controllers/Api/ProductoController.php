@@ -27,7 +27,7 @@ class ProductoController extends Controller
             'cantidad' => 'required|integer|min:0',
             'precio' => 'required|numeric|min:0',
             'stock_minimo' => 'required|integer|min:0',
-            'codigo_barras' => 'required|string|max:50|unique:productos,codigo_barras',
+            'codigo_barras' => 'required|string|max:50',
         ]);
 
         if ($validator->fails()) {
@@ -40,6 +40,21 @@ class ProductoController extends Controller
         $almacen = Almacen::where('id_almacen', $request->id_almacen)
             ->where('id_empresa', $request->user()->id_empresa)
             ->firstOrFail();
+
+        $productoExistente = Producto::where('id_almacen', $almacen->id_almacen)
+            ->where('codigo_barras', $request->codigo_barras)
+            ->first();
+
+        if ($productoExistente) {
+            return response()->json([
+                'message' => 'Error de validación',
+                'errors' => [
+                    'codigo_barras' => [
+                        'Ya existe un producto con ese código de barras en este almacén.'
+                    ]
+                ]
+            ], 422);
+        }
 
         $producto = Producto::create([
             'id_almacen' => $almacen->id_almacen,
@@ -69,13 +84,29 @@ class ProductoController extends Controller
             'cantidad' => 'required|integer|min:0',
             'precio' => 'required|numeric|min:0',
             'stock_minimo' => 'required|integer|min:0',
-            'codigo_barras' => 'required|string|max:50|unique:productos,codigo_barras,' . $id . ',id_producto',
+            'codigo_barras' => 'required|string|max:50',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
                 'message' => 'Error de validación',
                 'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        $productoExistente = Producto::where('id_almacen', $almacen->id_almacen)
+            ->where('codigo_barras', $request->codigo_barras)
+            ->where('id_producto', '!=', $producto->id_producto)
+            ->first();
+
+        if ($productoExistente) {
+            return response()->json([
+                'message' => 'Error de validación',
+                'errors' => [
+                    'codigo_barras' => [
+                        'Ya existe un producto con ese código de barras en este almacén.'
+                    ]
+                ]
             ], 422);
         }
 
