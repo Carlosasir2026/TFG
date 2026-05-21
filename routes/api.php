@@ -13,6 +13,9 @@ Route::post('/empresas', [EmpresaController::class, 'store']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 
+    Route::get('/usuario', [AuthController::class, 'me']);
+    Route::put('/usuario/password', [AuthController::class, 'changePassword']);
+
     Route::get('/almacenes', [AlmacenController::class, 'index']);
     Route::post('/almacenes', [AlmacenController::class, 'store']);
     Route::put('/almacenes/{id}', [AlmacenController::class, 'update']);

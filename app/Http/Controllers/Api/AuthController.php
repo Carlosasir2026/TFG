@@ -115,4 +115,53 @@ class AuthController extends Controller
             'message' => 'Sesión cerrada correctamente',
         ]);
     }
+
+public function me(Request $request)
+{
+    $usuario = $request->user();
+
+    return response()->json([
+        'usuario' => [
+            'id' => $usuario->id,
+            'nombre' => $usuario->nombre,
+            'dni' => $usuario->dni,
+            'email' => $usuario->email,
+            'id_empresa' => $usuario->id_empresa,
+        ],
+    ]);
+}
+public function changePassword(Request $request)
+{
+    $validator = Validator::make($request->all(), [
+        'password_actual' => 'required|string',
+        'password_nueva' => 'required|string|min:6|confirmed',
+    ], [
+        'password_actual.required' => 'Debes introducir tu contraseña actual.',
+        'password_nueva.required' => 'Debes introducir una nueva contraseña.',
+        'password_nueva.min' => 'La nueva contraseña debe tener al menos 6 caracteres.',
+        'password_nueva.confirmed' => 'La confirmación de la contraseña no coincide.',
+    ]);
+
+    if ($validator->fails()) {
+        return response()->json([
+            'message' => 'Error de validación',
+            'errors' => $validator->errors(),
+        ], 422);
+    }
+
+    $usuario = $request->user();
+
+    if (!Hash::check($request->password_actual, $usuario->password)) {
+        return response()->json([
+            'message' => 'La contraseña actual no es correcta.',
+        ], 422);
+    }
+
+    $usuario->password = Hash::make($request->password_nueva);
+    $usuario->save();
+
+    return response()->json([
+        'message' => 'Contraseña actualizada correctamente.',
+    ]);
+}
 }
