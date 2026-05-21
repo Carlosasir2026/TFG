@@ -120,6 +120,8 @@ public function me(Request $request)
 {
     $usuario = $request->user();
 
+    $empresa = \App\Models\Empresa::where('id', $usuario->id_empresa)->first();
+
     return response()->json([
         'usuario' => [
             'id' => $usuario->id,
@@ -127,9 +129,11 @@ public function me(Request $request)
             'dni' => $usuario->dni,
             'email' => $usuario->email,
             'id_empresa' => $usuario->id_empresa,
+            'empresa' => $empresa ? $empresa->nombre : 'No indicada',
         ],
     ]);
 }
+
 public function changePassword(Request $request)
 {
     $validator = Validator::make($request->all(), [
