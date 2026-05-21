@@ -12,7 +12,7 @@ Route::post('/empresas', [EmpresaController::class, 'store']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
-
+    
     Route::get('/almacenes', [AlmacenController::class, 'index']);
     Route::post('/almacenes', [AlmacenController::class, 'store']);
     Route::put('/almacenes/{id}', [AlmacenController::class, 'update']);
@@ -22,4 +22,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/productos', [ProductoController::class, 'store']);
     Route::put('/productos/{id}', [ProductoController::class, 'update']);
     Route::delete('/productos/{id}', [ProductoController::class, 'destroy']);
+    Route::get('/productos/buscar', [ProductoController::class, 'buscar']);
 });

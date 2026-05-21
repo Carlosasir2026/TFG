@@ -138,4 +138,35 @@ class ProductoController extends Controller
             'message' => 'Producto eliminado correctamente',
         ]);
     }
+    public function buscar(Request $request){
+        $request->validate([
+            'campo' => 'required|in:nombre,precio,codigo_barras',
+            'busqueda' => 'required|string|max:100',
+        ]);
+
+        $campo = $request->input('campo');
+        $busqueda = $request->input('busqueda');
+
+        $query = Producto::query();
+
+        if ($campo === 'codigo_barras') {
+            $query->where('codigo_barras', 'LIKE', $busqueda . '%');
+        }
+
+        if ($campo === 'nombre') {
+
+            $query->where('nombre', 'LIKE', '%' . $busqueda . '%');
+        }
+
+        if ($campo === 'precio') {
+            $query->where('precio', 'LIKE', $busqueda . '%');
+        }
+
+        $productos = $query->get();
+
+        return response()->json([
+            'message' => 'Productos encontrados correctamente',
+            'productos' => $productos,
+        ]);
+    }
 }
