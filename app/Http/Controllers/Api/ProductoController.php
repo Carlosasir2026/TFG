@@ -138,28 +138,43 @@ class ProductoController extends Controller
             'message' => 'Producto eliminado correctamente',
         ]);
     }
-    public function buscar(Request $request){
+        public function buscar(Request $request, $id)
+    {
         $request->validate([
             'campo' => 'required|in:nombre,precio,codigo_barras',
             'busqueda' => 'required|string|max:100',
+        ], [
+            'campo.required' => 'Debes seleccionar un campo de búsqueda.',
+            'campo.in' => 'El campo de búsqueda no es válido.',
+            'busqueda.required' => 'Debes escribir algo para buscar.',
+            'busqueda.max' => 'La búsqueda no puede superar los 100 caracteres.',
         ]);
+
+        $almacen = Almacen::where('id_almacen', $id)
+            ->where('id_empresa', $request->user()->id_empresa)
+            ->firstOrFail();
 
         $campo = $request->input('campo');
         $busqueda = $request->input('busqueda');
 
-        $query = Producto::query();
-
-        if ($campo === 'codigo_barras') {
-            $query->where('codigo_barras', 'LIKE', $busqueda . '%');
-        }
+        $query = Producto::where('id_almacen', $almacen->id_almacen);
 
         if ($campo === 'nombre') {
-
-            $query->where('nombre', 'LIKE', '%' . $busqueda . '%');
+            $query->whereRaw(
+                "unaccent(lower(nombre)) LIKE unaccent(lower(?))",
+                ['%' . $busqueda . '%']
+            );
         }
 
         if ($campo === 'precio') {
-            $query->where('precio', 'LIKE', $busqueda . '%');
+            $query->whereRaw(
+                "CAST(precio AS TEXT) LIKE ?",
+                [$busqueda . '%']
+            );
+        }
+
+        if ($campo === 'codigo_barras') {
+            $query->where('codigo_barras', 'LIKE', $busqueda . '%');
         }
 
         $productos = $query->get();
